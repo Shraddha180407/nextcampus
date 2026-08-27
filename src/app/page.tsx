@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 async function getFeaturedColleges() {
   try {
     return await prisma.college.findMany({
-      take: 6,
+      take: 8,
       orderBy: { nirfRank: 'asc' },
       include: {
         streams: { select: { stream: true } },
@@ -167,7 +167,7 @@ export default async function HomePage() {
         </div>
 
         {featuredColleges.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {featuredColleges.map((college) => (
               <CollegeCard key={college.id} college={college} />
             ))}

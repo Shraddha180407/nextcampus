@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import SearchBar from '@/components/SearchBar';
 import FilterSidebar from '@/components/FilterSidebar';
 import CollegeCard from '@/components/CollegeCard';
-import { SlidersHorizontal, Loader2, Frown, ArrowUpDown, X } from 'lucide-react';
+import { SlidersHorizontal, Loader2, Frown, ArrowUpDown, X, LayoutGrid } from 'lucide-react';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -25,6 +25,7 @@ function CollegesListContent() {
   const [sort, setSort] = useState(searchParams.get('sort') || 'rating');
   const [order, setOrder] = useState(searchParams.get('order') || 'desc');
   const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
+  const [limit, setLimit] = useState(Number(searchParams.get('limit')) || 24);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Sync state to URL params
@@ -40,9 +41,10 @@ function CollegesListContent() {
     if (sort) params.set('sort', sort);
     if (order) params.set('order', order);
     if (page > 1) params.set('page', String(page));
+    if (limit !== 24) params.set('limit', String(limit));
 
     router.replace(`/colleges?${params.toString()}`, { scroll: false });
-  }, [searchQuery, stream, state, type, minRating, exam, maxFee, sort, order, page, router]);
+  }, [searchQuery, stream, state, type, minRating, exam, maxFee, sort, order, page, limit, router]);
 
   useEffect(() => {
     updateUrl();
@@ -60,7 +62,7 @@ function CollegesListContent() {
   queryParams.set('sort', sort);
   queryParams.set('order', order);
   queryParams.set('page', String(page));
-  queryParams.set('limit', '12');
+  queryParams.set('limit', String(limit));
 
   const { data, error, isLoading } = useSWR(`/api/colleges?${queryParams.toString()}`, fetcher, {
     keepPreviousData: true,
@@ -123,9 +125,9 @@ function CollegesListContent() {
       {/* Header & Search */}
       <div className="space-y-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900">Explore & Discover Colleges</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Explore & Discover Colleges</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Filter through premier universities by entrance exam, annual tuition fees, and placements
+            Explore premier institutions across India with verified fees, placement trends, and entrance cutoffs
           </p>
         </div>
 
@@ -143,14 +145,15 @@ function CollegesListContent() {
           <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
             <button
               onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-              className="lg:hidden flex items-center gap-1.5 px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 shadow-xs"
+              className="lg:hidden flex items-center gap-1.5 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-xs"
             >
               <SlidersHorizontal className="w-4 h-4" />
               <span>Filters ({activeFilters.length})</span>
             </button>
 
-            <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-2 rounded-xl text-sm shadow-xs">
-              <ArrowUpDown className="w-4 h-4 text-slate-400" />
+            {/* Sort Selector */}
+            <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-2.5 rounded-xl text-xs shadow-xs">
+              <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
               <select
                 value={`${sort}-${order}`}
                 onChange={(e) => {
@@ -158,11 +161,28 @@ function CollegesListContent() {
                   setSort(newSort);
                   setOrder(newOrder);
                 }}
-                className="bg-transparent border-none text-slate-700 text-xs font-semibold focus:ring-0 cursor-pointer"
+                className="bg-transparent border-none text-slate-700 font-bold focus:ring-0 cursor-pointer"
               >
                 <option value="rating-desc">Highest Rated</option>
-                <option value="nirfRank-asc">NIRF Ranking (Top First)</option>
+                <option value="nirfRank-asc">NIRF Rank (Top First)</option>
                 <option value="name-asc">Alphabetical (A-Z)</option>
+              </select>
+            </div>
+
+            {/* Items Per Page Selector */}
+            <div className="hidden sm:flex items-center gap-1 bg-white border border-slate-200 px-2.5 py-2 rounded-xl text-xs font-bold text-slate-600 shadow-xs">
+              <span className="text-slate-400 font-medium">Show:</span>
+              <select
+                value={limit}
+                onChange={(e) => {
+                  setLimit(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="bg-transparent border-none text-blue-600 font-bold focus:ring-0 cursor-pointer text-xs p-0"
+              >
+                <option value="12">12</option>
+                <option value="24">24</option>
+                <option value="48">48</option>
               </select>
             </div>
           </div>
@@ -171,11 +191,11 @@ function CollegesListContent() {
         {/* Active Filters Pills */}
         {activeFilters.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 pt-2">
-            <span className="text-xs font-semibold text-slate-400 mr-1">Active filters:</span>
+            <span className="text-xs font-bold text-slate-400 mr-1">Active filters:</span>
             {activeFilters.map((af, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-medium px-2.5 py-1 rounded-lg"
+                className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold px-3 py-1 rounded-xl shadow-2xs"
               >
                 <span>{af.label}</span>
                 <button
@@ -188,7 +208,7 @@ function CollegesListContent() {
             ))}
             <button
               onClick={handleResetFilters}
-              className="text-xs font-semibold text-red-600 hover:text-red-700 ml-2"
+              className="text-xs font-bold text-red-600 hover:text-red-700 ml-2"
             >
               Clear All
             </button>
@@ -237,13 +257,15 @@ function CollegesListContent() {
 
         {/* College Grid List */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
-            <span>
-              Showing {colleges.length} of {pagination.total} colleges
+          <div className="flex items-center justify-between text-xs text-slate-500 font-bold bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-2xs">
+            <span className="flex items-center gap-1.5">
+              <LayoutGrid className="w-4 h-4 text-blue-600" />
+              Showing <span className="text-slate-900 font-extrabold">{colleges.length}</span> of{' '}
+              <span className="text-slate-900 font-extrabold">{pagination.total}</span> institutions
             </span>
             {isLoading && (
-              <span className="flex items-center gap-1 text-blue-600 font-semibold">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Updating...
+              <span className="flex items-center gap-1 text-blue-600 font-bold">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Updating catalog...
               </span>
             )}
           </div>
@@ -272,13 +294,13 @@ function CollegesListContent() {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-3">
+            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-3 shadow-xs">
               <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
                 <Frown className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">No matching colleges found</h3>
               <p className="text-sm text-slate-500 max-w-sm mx-auto">
-                Try widening your fee range, choosing different exams, or clearing active filters.
+                Try widening your fee range, choosing different entrance exams, or clearing active filters.
               </p>
               <button
                 onClick={handleResetFilters}
@@ -289,22 +311,23 @@ function CollegesListContent() {
             </div>
           )}
 
+          {/* Pagination */}
           {pagination.totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-6">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50"
+                className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 shadow-2xs"
               >
                 Previous
               </button>
-              <span className="text-xs font-semibold text-slate-600 px-3">
+              <span className="text-xs font-bold text-slate-600 px-3">
                 Page {page} of {pagination.totalPages}
               </span>
               <button
                 disabled={page >= pagination.totalPages}
                 onClick={() => setPage((p) => p + 1)}
-                className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50"
+                className="px-4 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 shadow-2xs"
               >
                 Next
               </button>
