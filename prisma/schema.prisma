@@ -1,0 +1,212 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum CollegeType {
+  GOVERNMENT
+  PRIVATE
+  DEEMED
+  CENTRAL
+}
+
+enum Stream {
+  ENGINEERING
+  MEDICAL
+  MANAGEMENT
+  LAW
+  ARTS
+  SCIENCE
+  COMMERCE
+  PHARMACY
+  ARCHITECTURE
+  DESIGN
+}
+
+enum Exam {
+  JEE_MAIN
+  JEE_ADVANCED
+  NEET
+  CAT
+  GATE
+  MAT
+  XAT
+  CLAT
+  STATE_CET
+  BITSAT
+  VITEEE
+}
+
+enum CourseLevel {
+  UG
+  PG
+  PHD
+  DIPLOMA
+  INTEGRATED
+}
+
+enum Category {
+  GENERAL
+  OBC
+  SC
+  ST
+  EWS
+  PWD
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NEUTRAL
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model College {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  shortName   String?
+  description String      @db.Text
+  logoUrl     String?
+  imageUrl    String?
+
+  // Location
+  city        String
+  state       String
+
+  // Classification
+  type        CollegeType
+
+  // Rankings & Accreditation
+  nirfRank    Int?
+  naacGrade   String?   // "A++", "A+", "A", "B++"
+
+  // Stats
+  establishedYear     Int?
+  campusAreaAcres     Float?
+  studentFacultyRatio String?   // e.g. "1:15"
+
+  // Aggregated rating (updated on each review submission)
+  overallRating Float?  @default(0)
+  ratingCount   Int     @default(0)
+
+  // Relations
+  streams       CollegeStream[]
+  exams         CollegeExam[]
+  courses       Course[]
+  placements    Placement[]
+  reviews       Review[]
+  cutoffs       CollegeCutoff[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CollegeStream {
+  id        String  @id @default(cuid())
+  collegeId String
+  stream    Stream
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, stream])
+  @@index([stream])
+}
+
+model CollegeExam {
+  id        String  @id @default(cuid())
+  collegeId String
+  exam      Exam
+  college   College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, exam])
+  @@index([exam])
+}
+
+model Course {
+  id          String      @id @default(cuid())
+  collegeId   String
+  name        String
+  shortName   String?
+  level       CourseLevel
+  stream      Stream
+  duration    Int         // in years
+  totalFees   Float       // entire course
+  annualFees  Float       // per year
+  seats       Int?
+  eligibility String?
+
+  college  College         @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  cutoffs  CollegeCutoff[]
+
+  @@index([collegeId])
+}
+
+model Placement {
+  id                 String  @id @default(cuid())
+  collegeId          String
+  year               Int
+  highestPackageLpa  Float?
+  averagePackageLpa  Float?
+  medianPackageLpa   Float?
+  placementPercent   Float?  // 0–100
+  totalOffers        Int?
+  topRecruiters      Json?   // ["Google", "Microsoft", "Amazon"]
+
+  college College @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@unique([collegeId, year])
+  @@index([collegeId])
+}
+
+model Review {
+  id             String  @id @default(cuid())
+  collegeId      String
+  reviewerName   String
+  graduationYear Int?
+  course         String?
+  overallRating  Float   // 1–5
+
+  infrastructureRating Float?
+  facultyRating        Float?
+  placementRating      Float?
+  hostelRating         Float?
+
+  reviewText String  @db.Text
+  pros       String?
+  cons       String?
+  helpful    Int     @default(0)
+
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([collegeId])
+}
+
+model CollegeCutoff {
+  id         String   @id @default(cuid())
+  collegeId  String
+  courseId   String?
+  exam       Exam
+  year       Int
+  category   Category
+  gender     Gender   @default(NEUTRAL)
+  round      Int      @default(1)
+  openRank   Int?
+  closeRank  Int?     // primary cutoff — used in predictor
+  percentile Float?   // for CAT / NEET percentile-based exams
+
+  college College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  course  Course?  @relation(fields: [courseId], references: [id])
+
+  @@index([collegeId, exam, year, category])
+}
