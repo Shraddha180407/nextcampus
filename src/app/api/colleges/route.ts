@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { collegeFilterSchema } from '@/lib/validations';
 import { Stream, Exam, CollegeType, Prisma } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = Object.fromEntries(request.nextUrl.searchParams.entries());
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.CollegeWhereInput = {};
 
-    // 1. Text Search (Name, shortName, city, state)
+    // 1. Text Search
     if (q && q.trim() !== '') {
       const query = q.trim();
       where.OR = [
@@ -83,7 +85,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 7. Fee Filter (Filter on courses' annualFees)
+    // 7. Fee Filter
     if (minFee !== undefined || maxFee !== undefined) {
       where.courses = {
         some: {

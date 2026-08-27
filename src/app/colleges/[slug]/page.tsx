@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import CollegeDetailClient from './CollegeDetailClient';
 
-export const revalidate = 30; // ISR 30s
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,

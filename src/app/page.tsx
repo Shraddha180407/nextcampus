@@ -3,7 +3,7 @@ import { Search, GitCompare, Calculator, Award, ArrowRight, BookOpen, Building2 
 import CollegeCard from '@/components/CollegeCard';
 import { prisma } from '@/lib/prisma';
 
-export const revalidate = 60; // SSR with 60s ISR
+export const dynamic = 'force-dynamic';
 
 async function getFeaturedColleges() {
   try {
@@ -47,7 +47,6 @@ export default async function HomePage() {
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-blue-900 via-indigo-900 to-slate-900 text-white py-20 px-4 sm:px-6 lg:px-8">
-        {/* Glow backdrop */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto text-center space-y-6">
@@ -175,7 +174,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
-            <p className="text-slate-500">Database connected. Run seed script to load featured colleges.</p>
+            <p className="text-slate-500">Discover top colleges across all streams.</p>
           </div>
         )}
       </section>
