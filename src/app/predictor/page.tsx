@@ -94,17 +94,17 @@ export default function PredictorPage() {
 
     const badgeConfig = {
       strong: {
-        bg: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        bg: 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold',
         text: 'Strong Match',
         icon: CheckCircle2,
       },
       possible: {
-        bg: 'bg-amber-50 text-amber-900 border-amber-200',
+        bg: 'bg-amber-100 text-amber-950 border-amber-300 font-extrabold',
         text: 'Possible',
         icon: AlertCircle,
       },
       reach: {
-        bg: 'bg-purple-50 text-purple-900 border-purple-200',
+        bg: 'bg-purple-100 text-purple-950 border-purple-300 font-extrabold',
         text: 'Reach / Target',
         icon: HelpCircle,
       },
@@ -115,19 +115,19 @@ export default function PredictorPage() {
     return (
       <div
         key={item.id}
-        className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 hover:shadow-md hover:border-blue-200 transition-all flex flex-col justify-between"
+        className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 hover:shadow-lg hover:border-blue-300 transition-all flex flex-col justify-between"
       >
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-2">
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-extrabold border px-2.5 py-1 rounded-lg ${badgeConfig.bg}`}
+              className={`inline-flex items-center gap-1 text-xs border px-2.5 py-1 rounded-lg ${badgeConfig.bg}`}
             >
               <Icon className="w-3.5 h-3.5" />
               {badgeConfig.text}
             </span>
 
             {col.nirfRank && (
-              <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+              <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md">
                 NIRF #{col.nirfRank}
               </span>
             )}
@@ -140,8 +140,8 @@ export default function PredictorPage() {
             >
               {col.name}
             </Link>
-            <div className="flex items-center gap-1 text-xs text-slate-400 mt-0.5">
-              <MapPin className="w-3 h-3" />
+            <div className="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
+              <MapPin className="w-3.5 h-3.5 text-slate-400" />
               <span>
                 {col.city}, {col.state}
               </span>
@@ -149,27 +149,31 @@ export default function PredictorPage() {
           </div>
 
           {/* Course & Cutoff Insight */}
-          <div className="bg-slate-50 p-2.5 rounded-xl text-xs space-y-1">
-            <span className="text-slate-500 block font-medium">Predicted Program:</span>
-            <span className="font-bold text-slate-800 block">
+          <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl text-xs space-y-1">
+            <span className="text-slate-500 block font-semibold">Predicted Program:</span>
+            <span className="font-extrabold text-slate-900 block text-sm">
               {item.course?.name || col.courses?.[0]?.name || 'All Core Engineering / Allied Programs'}
             </span>
-            <span className="text-[11px] text-slate-400 block">
+            <span className="text-xs text-slate-600 block font-medium">
               Historical Cutoff: Round 1 Closing Rank ~{item.closeRank || item.percentile + '%ile'}
             </span>
           </div>
 
           {/* Quick Metrics */}
           <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-            <div className="bg-slate-50 p-2 rounded-lg">
-              <span className="text-[10px] text-slate-400 block font-medium">Avg Annual Fee</span>
-              <span className="font-bold text-slate-800 mt-0.5 block">
+            <div className="bg-slate-50 border border-slate-100 p-2.5 rounded-xl">
+              <span className="text-[10px] text-slate-500 block font-semibold uppercase tracking-wider">
+                Avg Annual Fee
+              </span>
+              <span className="font-extrabold text-slate-900 text-sm mt-0.5 block">
                 {formatFee(col.courses?.[0]?.annualFees)}
               </span>
             </div>
-            <div className="bg-emerald-50/60 p-2 rounded-lg">
-              <span className="text-[10px] text-emerald-600 block font-medium">Avg Package</span>
-              <span className="font-bold text-emerald-800 mt-0.5 block">
+            <div className="bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl">
+              <span className="text-[10px] text-emerald-800 block font-semibold uppercase tracking-wider">
+                Avg Package
+              </span>
+              <span className="font-extrabold text-emerald-900 text-sm mt-0.5 block">
                 {formatLpa(col.placements?.[0]?.averagePackageLpa)}
               </span>
             </div>
@@ -187,10 +191,10 @@ export default function PredictorPage() {
                 overallRating: col.overallRating,
               })
             }
-            className={`px-3 py-1.5 rounded-lg border transition-all ${
+            className={`px-3 py-1.5 rounded-xl border transition-all ${
               isCompared
-                ? 'bg-blue-50 text-blue-700 border-blue-200'
-                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
             {isCompared ? 'In Compare' : '+ Compare'}
@@ -198,10 +202,10 @@ export default function PredictorPage() {
 
           <Link
             href={`/colleges/${col.slug}`}
-            className="text-blue-600 hover:text-blue-800 flex items-center gap-0.5"
+            className="text-blue-600 hover:text-blue-800 flex items-center gap-1 font-extrabold"
           >
-            <span>View Full Details</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <span>View Profile</span>
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
@@ -212,21 +216,21 @@ export default function PredictorPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <div className="max-w-3xl space-y-2">
-        <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
-          <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Admission Intelligence
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-lg">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-700" /> Admission Intelligence
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900">Rank & Admission Predictor</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-3xl font-black text-slate-900">Rank & Admission Predictor</h1>
+        <p className="text-sm text-slate-600 font-normal">
           Match your entrance test score or rank against previous closing cutoff trends to see categorized college chances.
         </p>
       </div>
 
       {/* Input Calculator Form */}
-      <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* 1. Exam Selector Tabs */}
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block mb-2.5">
               1. Select Entrance Exam
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
@@ -238,16 +242,16 @@ export default function PredictorPage() {
                     setSelectedExam(exam);
                     setInputValue('');
                   }}
-                  className={`p-2.5 rounded-xl text-xs font-bold border transition-all text-left ${
+                  className={`p-3 rounded-xl text-xs font-bold border transition-all text-left ${
                     selectedExam.id === exam.id
                       ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20'
-                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                      : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50'
                   }`}
                 >
-                  <span className="block">{exam.name.split(' ')[0]}</span>
+                  <span className="block font-bold">{exam.name.split(' ')[0]}</span>
                   <span
-                    className={`text-[10px] block font-medium ${
-                      selectedExam.id === exam.id ? 'text-blue-100' : 'text-slate-400'
+                    className={`text-[11px] block font-medium mt-0.5 ${
+                      selectedExam.id === exam.id ? 'text-blue-100' : 'text-slate-500'
                     }`}
                   >
                     {exam.name.split('(')[1]?.replace(')', '') || ''}
@@ -260,7 +264,7 @@ export default function PredictorPage() {
           {/* 2. Rank / Percentile, Category, Gender Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-1.5">
                 2. Your {selectedExam.type === 'percentile' ? 'Percentile' : 'All India Rank'}
               </label>
               <input
@@ -272,21 +276,21 @@ export default function PredictorPage() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder={selectedExam.placeholder}
-                className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-2xs"
+                className="w-full px-4 py-3 text-sm font-bold bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-2xs"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-1.5">
                 3. Reservation Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs font-semibold border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer bg-white"
+                className="w-full px-3.5 py-3 text-xs font-bold bg-white text-slate-900 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
               >
                 {CATEGORIES.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
+                  <option key={cat.id} value={cat.id} className="text-slate-900 bg-white">
                     {cat.label}
                   </option>
                 ))}
@@ -294,41 +298,41 @@ export default function PredictorPage() {
             </div>
 
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-1.5">
                 4. Gender / Quota Pool
               </label>
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full px-3 py-2.5 text-xs font-semibold border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer bg-white"
+                className="w-full px-3.5 py-3 text-xs font-bold bg-white text-slate-900 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
               >
-                <option value="NEUTRAL">Gender-Neutral Pool</option>
-                <option value="FEMALE">Female Supernumerary Only</option>
+                <option value="NEUTRAL" className="text-slate-900 bg-white">Gender-Neutral Pool</option>
+                <option value="FEMALE" className="text-slate-900 bg-white">Female Supernumerary Only</option>
               </select>
             </div>
           </div>
 
           {/* Submit Button */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
               <span>Predictions use Round 1 & Round 2 historical closing cutoff curves.</span>
             </div>
 
             <button
               type="submit"
               disabled={isLoading || !inputValue}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/25 disabled:opacity-50 transition-all"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/25 disabled:opacity-50 transition-all cursor-pointer"
             >
               {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Calculator className="w-4 h-4" />}
-              <span>Predict Colleges</span>
+              <span>Predict Eligible Colleges</span>
             </button>
           </div>
         </form>
       </div>
 
       {errorMsg && (
-        <div className="p-4 bg-red-50 text-red-800 border border-red-200 rounded-2xl text-sm font-semibold">
+        <div className="p-4 bg-red-50 text-red-900 border border-red-200 rounded-2xl text-sm font-bold">
           {errorMsg}
         </div>
       )}
@@ -337,30 +341,30 @@ export default function PredictorPage() {
       {results && (
         <div className="space-y-8 animate-in fade-in-50 duration-200">
           {/* Results Summary Banner */}
-          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold">
+          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
+            <div className="space-y-1.5">
+              <h2 className="text-xl sm:text-2xl font-black text-white">
                 Prediction Results for {results.userInput.rank ? `AIR #${results.userInput.rank}` : `${results.userInput.percentile}%ile`} ({results.userInput.category})
               </h2>
-              <p className="text-xs text-slate-400">
-                Found {results.totalRecommendations} matching institutional programs across 3 probability tiers
+              <p className="text-xs sm:text-sm text-slate-300">
+                Found <span className="text-white font-bold">{results.totalRecommendations}</span> matching institutional programs across 3 probability tiers
               </p>
             </div>
 
             {/* Disclaimer pill */}
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs text-amber-300 max-w-md">
-              <strong>Notice:</strong> Historical cutoff-based estimate — not an admission guarantee.
+            <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-3.5 text-xs text-amber-200 max-w-md leading-relaxed">
+              <strong className="text-amber-300">Notice:</strong> Historical cutoff-based estimate for counseling guidance — not an official admission guarantee.
             </div>
           </div>
 
           {/* 1. Strong Match Tier */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-emerald-500" />
-              <h3 className="text-lg font-bold text-slate-900">
+              <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100" />
+              <h3 className="text-lg font-extrabold text-slate-900">
                 Strong Match ({results.strongMatch?.length || 0})
               </h3>
-              <span className="text-xs text-slate-500 font-normal">
+              <span className="text-xs text-slate-600 font-medium">
                 — High probability based on past year closing ranks
               </span>
             </div>
@@ -372,7 +376,7 @@ export default function PredictorPage() {
                 )}
               </div>
             ) : (
-              <p className="text-xs text-slate-400 italic bg-white p-4 rounded-xl border border-slate-100">
+              <p className="text-xs text-slate-600 italic bg-white p-4 rounded-xl border border-slate-200">
                 No strong matches found in this score tier. Check Possible or Reach institutes below.
               </p>
             )}
@@ -381,11 +385,11 @@ export default function PredictorPage() {
           {/* 2. Possible Tier */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-amber-500" />
-              <h3 className="text-lg font-bold text-slate-900">
+              <div className="w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-amber-100" />
+              <h3 className="text-lg font-extrabold text-slate-900">
                 Possible Matches ({results.possible?.length || 0})
               </h3>
-              <span className="text-xs text-slate-500 font-normal">
+              <span className="text-xs text-slate-600 font-medium">
                 — Moderate probability (within 15% cutoff margin)
               </span>
             </div>
@@ -395,21 +399,21 @@ export default function PredictorPage() {
                 {results.possible.map((item: any) => renderRecommendationCard(item, 'possible'))}
               </div>
             ) : (
-              <p className="text-xs text-slate-400 italic bg-white p-4 rounded-xl border border-slate-100">
+              <p className="text-xs text-slate-600 italic bg-white p-4 rounded-xl border border-slate-200">
                 No colleges in the immediate 15% cutoff boundary.
               </p>
             )}
           </div>
 
-          {/* 3. Reach Tier */}
+          {/* 3. Reach / Dream Tier */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-purple-500" />
-              <h3 className="text-lg font-bold text-slate-900">
-                Reach / Ambitious ({results.reach?.length || 0})
+              <div className="w-3.5 h-3.5 rounded-full bg-purple-500 ring-4 ring-purple-100" />
+              <h3 className="text-lg font-extrabold text-slate-900">
+                Reach / Ambitious Choices ({results.reach?.length || 0})
               </h3>
-              <span className="text-xs text-slate-500 font-normal">
-                — Competitive tier; potential in spot/special rounds
+              <span className="text-xs text-slate-600 font-medium">
+                — Competitive tier requiring spot rounds or vacancy shifts
               </span>
             </div>
 
@@ -418,8 +422,8 @@ export default function PredictorPage() {
                 {results.reach.map((item: any) => renderRecommendationCard(item, 'reach'))}
               </div>
             ) : (
-              <p className="text-xs text-slate-400 italic bg-white p-4 rounded-xl border border-slate-100">
-                No reach tier colleges identified.
+              <p className="text-xs text-slate-600 italic bg-white p-4 rounded-xl border border-slate-200">
+                No colleges in the reach bracket.
               </p>
             )}
           </div>
