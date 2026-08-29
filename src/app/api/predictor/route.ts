@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Process each cutoff
+    // Process each cutoff with exact mathematical thresholds
     const processedCollegeIds = new Set<string>();
 
     for (const item of evaluatedCutoffs) {
@@ -109,10 +109,10 @@ export async function POST(request: NextRequest) {
         if (rank <= cutoff * 0.85) {
           strongMatch.push({ ...item, matchScore: 92 });
           processedCollegeIds.add(item.collegeId);
-        } else if (rank <= cutoff * 1.15) {
+        } else if (rank <= cutoff * 1.10) {
           possible.push({ ...item, matchScore: 70 });
           processedCollegeIds.add(item.collegeId);
-        } else if (rank <= cutoff * 1.45) {
+        } else if (rank <= cutoff * 1.35) {
           reach.push({ ...item, matchScore: 45 });
           processedCollegeIds.add(item.collegeId);
         }

@@ -365,7 +365,7 @@ export default function PredictorPage() {
                 Strong Match ({results.strongMatch?.length || 0})
               </h3>
               <span className="text-xs text-slate-600 font-medium">
-                — High probability based on past year closing ranks
+                — Rank comfortably within past closing cutoffs (≤ 0.85× cutoff)
               </span>
             </div>
 
@@ -390,7 +390,7 @@ export default function PredictorPage() {
                 Possible Matches ({results.possible?.length || 0})
               </h3>
               <span className="text-xs text-slate-600 font-medium">
-                — Moderate probability (within 15% cutoff margin)
+                — Close to past closing cutoffs (within 10% margin, ≤ 1.10× cutoff)
               </span>
             </div>
 
@@ -400,7 +400,7 @@ export default function PredictorPage() {
               </div>
             ) : (
               <p className="text-xs text-slate-600 italic bg-white p-4 rounded-xl border border-slate-200">
-                No colleges in the immediate 15% cutoff boundary.
+                No colleges in the immediate 10% cutoff boundary.
               </p>
             )}
           </div>
@@ -410,10 +410,10 @@ export default function PredictorPage() {
             <div className="flex items-center gap-2">
               <div className="w-3.5 h-3.5 rounded-full bg-purple-500 ring-4 ring-purple-100" />
               <h3 className="text-lg font-extrabold text-slate-900">
-                Reach / Ambitious Choices ({results.reach?.length || 0})
+                Reach Choices ({results.reach?.length || 0})
               </h3>
               <span className="text-xs text-slate-600 font-medium">
-                — Competitive tier requiring spot rounds or vacancy shifts
+                — Above past closing cutoffs (≤ 1.35× cutoff, requiring cutoff shifts)
               </span>
             </div>
 
